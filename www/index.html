@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GoalPay Tracker</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#14574d"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#edf3f0;--card:#fff;--ink:#14312c;--mut:#5d7771;--line:#d5e2dd;--pine:#14574d;--pine2:#0e3f38;--gold:#f0b429;--red:#c2410c;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1b18;--card:#142622;--ink:#e6f1ed;--mut:#8fb0a8;--line:#244039;--pine:#3fb59f;--pine2:#2c8a78;--gold:#f0b429;--red:#f59e63;--on:#08201b}}
+:root[data-theme="dark"]{--bg:#0d1b18;--card:#142622;--ink:#e6f1ed;--mut:#8fb0a8;--line:#244039;--pine:#3fb59f;--pine2:#2c8a78;--gold:#f0b429;--red:#f59e63;--on:#08201b}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',Figtree,sans-serif;margin:0;line-height:1.15}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.logo{font:800 26px 'Bricolage Grotesque',sans-serif;color:var(--pine)}
+.note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);padding:10px 14px;border-radius:10px;font-size:14px;color:var(--mut);margin-bottom:18px}
+nav{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);padding:5px;border-radius:14px;width:max-content;max-width:100%;margin-bottom:20px}
+nav button{border:0;background:none;color:var(--mut);font:600 15px Figtree,sans-serif;padding:10px 20px;border-radius:10px;cursor:pointer}
+nav button[aria-selected=true]{background:var(--pine);color:var(--on)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.grid{display:grid;grid-template-columns:1fr 1.3fr;gap:18px}
+@media(max-width:780px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.card+.card{margin-top:18px}
+h2{font-size:20px;margin-bottom:12px}
+label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin-bottom:4px}
+input,select{width:100%;font:16px Figtree,sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.f{margin-bottom:10px}
+.btn{width:100%;border:0;background:var(--pine);color:var(--on);font:600 16px Figtree,sans-serif;padding:12px;border-radius:10px;cursor:pointer}
+.btn:hover{background:var(--pine2)}
+.ghost{background:none;border:1px solid var(--line);color:var(--mut);padding:4px 10px;border-radius:8px;font:500 13px Figtree;cursor:pointer;width:auto}
+.goal{display:block;width:100%;text-align:left;background:var(--bg);border:2px solid transparent;border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;color:var(--ink);font:inherit}
+.goal[aria-pressed=true]{border-color:var(--pine)}
+.goal b{display:flex;justify-content:space-between;gap:8px}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--pine);border-radius:6px;transition:width .5s}
+.big{font:800 40px 'Bricolage Grotesque',sans-serif;color:var(--pine)}
+.mut{color:var(--mut);font-size:14px}
+.hours{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+@media(max-width:520px){.hours{grid-template-columns:repeat(2,1fr)}}
+.hours div{background:var(--bg);border-radius:12px;padding:10px;text-align:center}
+.hours strong{display:block;font:800 22px 'Bricolage Grotesque',sans-serif}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.list li:last-child{border:0}
+.tot{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.tot div{background:var(--bg);border-radius:12px;padding:10px;text-align:center}
+.tot strong{display:block;font:800 22px 'Bricolage Grotesque',sans-serif}
+.cat{margin:8px 0}.cat span{display:flex;justify-content:space-between;font-size:14px}
+.cat .bar{height:8px;margin-top:3px}.cat .bar i{background:var(--gold)}
+.flag{color:var(--red);font-size:13px;font-weight:600}
+.empty{color:var(--mut);padding:14px;text-align:center;border:1px dashed var(--line);border-radius:12px}
+.chk{font-size:14px;color:var(--mut);padding-left:18px;margin:6px 0 0}
+[hidden]{display:none!important}
+#auth{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+#auth .card{width:100%;max-width:400px}#auth .btn+.btn{margin-top:8px}
+.btn.alt{background:none;border:1px solid var(--line);color:var(--ink)}
+#msg{font-size:14px;min-height:20px;margin:8px 0;color:var(--red)}#msg.ok{color:var(--pine)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">GoalPay Tracker</div><div style="display:flex;gap:8px"><button class="ghost" id="theme">Switch theme</button><button class="ghost" id="out" hidden>Sign out</button></div></header>
+<nav role="tablist"><button role="tab" id="t-goals" aria-selected="true">Goals</button><button role="tab" id="t-exp" aria-selected="false">Expenses</button></nav>
+
+<section id="goals" class="grid">
+<div>
+<div class="card"><h2>Your goals</h2><div id="goalList"></div></div>
+<div class="card"><h2>New goal</h2>
+<div class="f"><label for="gn">What are you saving for?</label><input id="gn" placeholder="e.g. Laptop"></div>
+<div class="row"><div><label for="gt">Price ($)</label><input id="gt" type="number" min="0" step="0.01"></div>
+<div><label for="gr">Your hourly pay ($)</label><input id="gr" type="number" min="0" step="0.01"></div></div>
+<div class="f"><label for="gd">Target date (optional)</label><input id="gd" type="date"></div>
+<button class="btn" id="addGoal">Add goal</button></div>
+</div>
+<div id="detail"></div>
+</section>
+
+<section id="exps" hidden>
+<div class="grid">
+<div class="card"><h2>Add an expense</h2>
+<div class="f"><label for="en">Name</label><input id="en" placeholder="e.g. Groceries"></div>
+<div class="row"><div><label for="ea">Amount ($)</label><input id="ea" type="number" min="0" step="0.01"></div>
+<div><label for="ec">Category</label><select id="ec"><option>Food</option><option>Transport</option><option>Bills</option><option>Fun</option><option>Shopping</option><option>Health</option><option>Other</option></select></div></div>
+<div class="f"><label for="ed">Date</label><input id="ed" type="date"></div>
+<div class="f"><label for="eg">Take money from goal</label><select id="eg"></select></div>
+<button class="btn" id="addExp">Add expense</button>
+<h2 style="margin-top:22px">Weekly check-in</h2>
+<ul class="chk"><li>Add last week's expenses</li><li>Check cards, cash and subscriptions</li><li>Review your totals</li><li>Spot unusual or avoidable spending</li></ul></div>
+<div class="card"><h2>Spending</h2><div class="tot" id="tot"></div>
+<div class="f"><label for="per">Break down by</label><select id="per"><option value="7">Last 7 days (week)</option><option value="14">Last 14 days (fortnight)</option><option value="30">Last 30 days (month)</option></select></div>
+<div id="cats"></div><h2 style="margin-top:18px">Recent entries</h2><ul class="list" id="expList"></ul></div>
+</div>
+</section>
+</div>
+<div id="auth"><div class="card">
+<div class="logo" style="margin-bottom:6px">GoalPay Tracker</div>
+<p class="mut" style="margin-top:0">Sign in to save your goals and expenses to your account.</p>
+<div id="pForm"><div class="f"><label for="em">Email</label><input id="em" type="email" autocomplete="email"></div>
+<div class="f"><label for="pw">Password (6+ characters)</label><input id="pw" type="password" autocomplete="current-password"></div>
+<div id="msg" role="status"></div>
+<button class="btn" id="inB">Sign in</button><button class="btn alt" id="upB">Create account</button>
+<button class="ghost" id="fgB" style="margin-top:10px">Forgot password</button></div>
+<div id="pVer" hidden><h2>Check your email</h2><p>We sent a verification link to <b id="vem"></b>. Open it, then come back here.</p>
+<div id="msg2" role="status" class="mut"></div>
+<button class="btn" id="doneB">I have verified my email</button><button class="btn alt" id="reB">Resend email</button><button class="ghost" id="so2" style="margin-top:10px">Use a different account</button></div>
+</div></div>
+<script src="firebase-config.js"></script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendEmailVerification,sendPasswordResetEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const g=id=>document.getElementById(id);
+const demo=String(window.FIREBASE_CONFIG.apiKey).startsWith('PASTE');
+const app=initializeApp(window.FIREBASE_CONFIG),auth=getAuth(app),db=getFirestore(app);
+const say=(t,ok)=>{g('msg').textContent=t;g('msg').className=ok?'ok':''};
+const nice=e=>({'auth/invalid-credential':'Wrong email or password.','auth/email-already-in-use':'That email already has an account. Sign in instead.','auth/weak-password':'Use a password with at least 6 characters.','auth/invalid-email':'Enter a valid email address.','auth/too-many-requests':'Too many tries. Wait a minute and try again.'}[e.code]||'Something went wrong. Check your connection and try again.');
+const creds=()=>[g('em').value.trim(),g('pw').value];
+g('inB').onclick=async()=>{try{await signInWithEmailAndPassword(auth,...creds())}catch(e){say(nice(e))}};
+g('upB').onclick=async()=>{try{const c=await createUserWithEmailAndPassword(auth,...creds());await sendEmailVerification(c.user)}catch(e){say(nice(e))}};
+g('fgB').onclick=async()=>{const e=g('em').value.trim();if(!e){say('Enter your email first.');return}try{await sendPasswordResetEmail(auth,e);say('Password reset email sent.',true)}catch(x){say(nice(x))}};
+g('reB').onclick=async()=>{try{await sendEmailVerification(auth.currentUser);g('msg2').textContent='Verification email sent again.'}catch(e){g('msg2').textContent=nice(e)}};
+g('doneB').onclick=async()=>{await auth.currentUser.reload();if(auth.currentUser.emailVerified)enter(auth.currentUser);else g('msg2').textContent='Not verified yet. Open the link in your email first.'};
+g('out').onclick=g('so2').onclick=()=>signOut(auth);
+let uid=null,t=null;
+async function enter(u){uid=u.uid;let d=null;
+try{const s=await getDoc(doc(db,'users',uid));if(s.exists())d=JSON.parse(s.data().data)}catch(e){}
+if(!d){try{d=JSON.parse(localStorage.getItem('goalpay'))}catch(e){}}
+window.setData(d||{goals:[],exps:[],sel:null});
+window.cloudSave=S=>{clearTimeout(t);t=setTimeout(()=>setDoc(doc(db,'users',uid),{data:JSON.stringify(S)}).catch(()=>{}),600)};
+g('auth').hidden=true;g('out').hidden=false}
+onAuthStateChanged(auth,u=>{if(demo)return;
+if(!u){uid=null;window.cloudSave=null;window.setData({goals:[],exps:[],sel:null});g('auth').hidden=false;g('out').hidden=true;g('pForm').hidden=false;g('pVer').hidden=true;return}
+if(!u.emailVerified){g('auth').hidden=false;g('pForm').hidden=true;g('pVer').hidden=false;g('vem').textContent=u.email;return}
+enter(u)});
+if(demo){g('auth').hidden=true;try{window.setData(JSON.parse(localStorage.getItem('goalpay'))||{goals:[],exps:[],sel:null})}catch(e){}
+document.querySelector('header').insertAdjacentHTML('afterend','<div class="note">Offline mode: data stays on this device. Add your Firebase details in firebase-config.js to turn on accounts and sync.</div>')}
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+<script>
+var S={goals:[],exps:[],sel:null};
+function load(){try{var r=localStorage.getItem('goalpay');if(r)S=JSON.parse(r)}catch(e){}}
+function save(){try{localStorage.setItem('goalpay',JSON.stringify(S))}catch(e){}if(window.cloudSave)window.cloudSave(S)}
+var $=function(i){return document.getElementById(i)};
+var money=function(n){return '$'+(+n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})};
+var uid=function(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
+var today=function(){return new Date().toISOString().slice(0,10)};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function spent(g){return S.exps.filter(function(e){return e.goal===g.id}).reduce(function(a,e){return a+e.amt},0)}
+function saved(g){return g.pays.reduce(function(a,p){return a+p.amt},0)-spent(g)}
+function tab(w){var g=w==='goals';$('goals').hidden=!g;$('exps').hidden=g;$('t-goals').setAttribute('aria-selected',g);$('t-exp').setAttribute('aria-selected',!g)}
+$('t-goals').onclick=function(){tab('goals')};$('t-exp').onclick=function(){tab('exps')};
+$('theme').onclick=function(){var d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;d.dataset.theme=dark?'light':'dark'};
+
+$('addGoal').onclick=function(){var n=$('gn').value.trim(),t=+$('gt').value,r=+$('gr').value;
+if(!n||t<=0||r<=0){alert('Enter a name, a price and your hourly pay.');return}
+var g={id:uid(),name:n,target:t,rate:r,date:$('gd').value,pays:[]};S.goals.push(g);S.sel=g.id;
+['gn','gt','gr','gd'].forEach(function(i){$(i).value=''});save();render()};
+
+function renderGoals(){var h='';
+if(!S.goals.length)h='<div class="empty">No goals yet. Add one below to start tracking.</div>';
+S.goals.forEach(function(g){var s=saved(g),p=Math.max(0,Math.min(100,s/g.target*100));
+h+='<button class="goal" data-id="'+g.id+'" aria-pressed="'+(g.id===S.sel)+'"><b><span>'+esc(g.name)+'</span><span>'+money(s)+' / '+money(g.target)+'</span></b><div class="bar"><i style="width:'+p+'%"></i></div></button>'});
+$('goalList').innerHTML=h;
+[].forEach.call(document.querySelectorAll('.goal'),function(b){b.onclick=function(){S.sel=b.dataset.id;save();render()}})}
+
+function renderDetail(){var g=S.goals.filter(function(x){return x.id===S.sel})[0],el=$('detail');
+if(!g){el.innerHTML='<div class="card empty">Pick or create a goal to see how many hours you need to work.</div>';return}
+var s=saved(g),left=Math.max(0,g.target-s),hrs=left/g.rate,h='';
+h+='<div class="card"><h2>'+esc(g.name)+'</h2><div class="big">'+money(left)+'</div><div class="mut">still to go. You have saved '+money(s)+' of '+money(g.target)+'.</div>'+(spent(g)>0?'<div class="mut">Includes '+money(spent(g))+' taken out for expenses.</div>':'');
+if(left===0)h+='<p><b>Goal reached. Time to buy it.</b></p>';
+else{h+='<h2 style="margin-top:18px">Work hours needed</h2><div class="mut">Total: '+hrs.toFixed(1)+' hours at '+money(g.rate)+' per hour.</div>';
+if(g.date){var days=Math.ceil((new Date(g.date+'T23:59:59')-new Date())/864e5);
+if(days>0){var d=hrs/days;h+='<div class="hours"><div><strong>'+d.toFixed(1)+'</strong>per day</div><div><strong>'+(d*7).toFixed(1)+'</strong>per week</div><div><strong>'+(d*14).toFixed(1)+'</strong>per fortnight</div><div><strong>'+(d*30).toFixed(1)+'</strong>per month</div></div><div class="mut" style="margin-top:8px">Spread over '+days+' days until '+g.date+'.</div>'}
+else h+='<p class="flag">Target date has passed. Pick a new date to see hours per period.</p>'}
+else h+='<p class="mut">Add a target date to see hours per day, week, fortnight and month.</p>'}
+h+='</div><div class="card"><h2>Add money to this goal</h2><div class="row"><div><label for="pa">Amount received ($)</label><input id="pa" type="number" min="0" step="0.01"></div><div><label for="pp">Paid</label><select id="pp"><option>Weekly</option><option>Fortnightly</option><option>Monthly</option></select></div></div><div class="f"><label for="pd">Date</label><input id="pd" type="date" value="'+today()+'"></div><button class="btn" id="addPay">Add to goal</button>';
+h+='<ul class="list" style="margin-top:12px">';
+g.pays.slice().reverse().forEach(function(p){h+='<li><span>'+p.date+' <span class="mut">'+p.per+'</span></span><span><b>'+money(p.amt)+'</b> <button class="ghost" data-p="'+p.id+'" aria-label="Delete payment">Delete</button></span></li>'});
+h+='</ul><button class="ghost" id="delGoal" style="margin-top:12px">Delete goal</button></div>';
+el.innerHTML=h;
+$('addPay').onclick=function(){var a=+$('pa').value;if(a<=0){alert('Enter the amount you received.');return}
+g.pays.push({id:uid(),amt:a,per:$('pp').value,date:$('pd').value||today()});save();render()};
+$('delGoal').onclick=function(){if(confirm('Delete this goal and its payments?')){S.exps.forEach(function(e){if(e.goal===g.id)e.goal=''});S.goals=S.goals.filter(function(x){return x.id!==g.id});S.sel=null;save();render()}};
+[].forEach.call(el.querySelectorAll('[data-p]'),function(b){b.onclick=function(){g.pays=g.pays.filter(function(p){return p.id!==b.dataset.p});save();render()}})}
+
+$('ed').value=today();
+var lastGoal=null;
+function fillGoalPick(){var el=$('eg'),cur=el.value||lastGoal||S.sel||'',h='<option value="">No goal (don\'t deduct)</option>';
+S.goals.forEach(function(g){h+='<option value="'+g.id+'">'+esc(g.name)+' ('+money(saved(g))+' saved)</option>'});
+el.innerHTML=h;el.value=S.goals.some(function(g){return g.id===cur})?cur:''}
+$('addExp').onclick=function(){var n=$('en').value.trim(),a=+$('ea').value;if(!n||a<=0){alert('Enter an expense name and amount.');return}
+S.exps.push({id:uid(),name:n,amt:a,cat:$('ec').value,date:$('ed').value||today(),goal:$('eg').value});lastGoal=$('eg').value;$('en').value='';$('ea').value='';save();render()};
+function within(days){var c=new Date();c.setHours(0,0,0,0);c.setDate(c.getDate()-days+1);var k=c.toISOString().slice(0,10);return S.exps.filter(function(e){return e.date>=k})}
+function sum(a){return a.reduce(function(t,e){return t+e.amt},0)}
+$('per').onchange=renderExp;
+function goalName(e){var g=S.goals.filter(function(x){return x.id===e.goal})[0];return g?g.name:''}
+function renderExp(){fillGoalPick();var w=within(7),f=within(14),m=within(30);
+$('tot').innerHTML='<div><strong>'+money(sum(w))+'</strong>7 days</div><div><strong>'+money(sum(f))+'</strong>14 days</div><div><strong>'+money(sum(m))+'</strong>30 days</div>';
+var cur=within(+$('per').value),by={};cur.forEach(function(e){by[e.cat]=(by[e.cat]||0)+e.amt});var tot=sum(cur),h='';
+Object.keys(by).sort(function(a,b){return by[b]-by[a]}).forEach(function(k){h+='<div class="cat"><span><span>'+k+'</span><span>'+money(by[k])+'</span></span><div class="bar"><i style="width:'+(by[k]/tot*100)+'%"></i></div></div>'});
+$('cats').innerHTML=h||'<div class="empty">No expenses in this period yet.</div>';
+var avg=cur.length?tot/cur.length:0,l='';
+S.exps.slice().sort(function(a,b){return a.date<b.date?1:-1}).slice(0,15).forEach(function(e){
+var big=cur.length>2&&e.amt>avg*2.5;
+l+='<li><span>'+esc(e.name)+' <span class="mut">'+e.cat+' · '+e.date+(goalName(e)?' · from '+esc(goalName(e)):'')+'</span>'+(big?'<br><span class="flag">Larger than usual</span>':'')+'</span><span><b>'+money(e.amt)+'</b> <button class="ghost" data-e="'+e.id+'" aria-label="Delete expense">Delete</button></span></li>'});
+$('expList').innerHTML=l||'<li class="mut">Nothing logged yet.</li>';
+[].forEach.call($('expList').querySelectorAll('[data-e]'),function(b){b.onclick=function(){S.exps=S.exps.filter(function(e){return e.id!==b.dataset.e});save();render()}})}
+function render(){renderGoals();renderDetail();renderExp()}
+window.setData=function(d){S=d;render()};load();render();
+</script>
+</body>
+</html>
